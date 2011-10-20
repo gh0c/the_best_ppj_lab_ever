@@ -41,6 +41,7 @@ def pretvori( regex ):
             (privremeno_lijevo, privremeno_desno) = pretvori(izbori[i])
             dodaj_epsilon_prijelaz(lijevo_stanje, privremeno_lijevo)
             dodaj_epsilon_prijelaz(privremeno_desno, desno_stanje)
+            
     else:
         prefiksirano = False
         trenutno_stanje = lijevo_stanje
@@ -75,18 +76,20 @@ def pretvori( regex ):
                         dodaj_epsilon_prijelaz (sljedece_stanje, trenutno_stanje)
                         i += 1
                     trenutno_stanje=sljedece_stanje
+                    
                 else:
                     br2_zagrada += 1
                     for x in range((i+1), len(a)):
-                            '''print ('x=%d, %s' % (x,a[x]))'''
-                            if a[x] == '(':
-                                    br2_zagrada +=1
-                            elif a[x] == ')':
-                                    br2_zagrada -= 1
-                                    if br2_zagrada == 0:
-                                        j = x
-                                        break
-                            else:continue
+                        '''print ('x=%d, %s' % (x,a[x]))'''
+                        if a[x] == '(':
+                                br2_zagrada +=1
+                        elif a[x] == ')':
+                                br2_zagrada -= 1
+                                if br2_zagrada == 0:
+                                    j = x
+                                    break
+                        else: continue
+                        
                     (privremeno_lijevo, privremeno_desno) = pretvori(izbori[(i+1):(j-1)])
                     dodaj_epsilon_prijelaz(trenutno_stanje, privremeno_lijevo)
                     i = j
@@ -95,6 +98,6 @@ def pretvori( regex ):
                         dodaj_epsilon_prijelaz(privremeno_lijevo, privremeno_desno)
                         dodaj_epsilon_prijelaz(privremeno_desno, privremeno_lijevo)
                         i += 1
-            dodaj_epsilon_prijelaz(trenutno_stanje, desno_stanje)
-            return (lijevo_stanje, desno_stanje)
+        dodaj_epsilon_prijelaz(trenutno_stanje, desno_stanje)
+    return (lijevo_stanje, desno_stanje)
         
