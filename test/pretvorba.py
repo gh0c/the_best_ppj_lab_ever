@@ -25,9 +25,9 @@ def pretvori( regex ):
         elif br_zagrada == 0 and regex[i] == '|' and je_operator(regex, i):
             
             izbori.append(regex[x:i])
-            print (len(regex[x:i]))
+            '''print (len(regex[x:i]))
             print (len(izbori[br_op_izbora]))
-            print ('\n', izbori, len(izbori))
+            print ('\n', izbori, len(izbori))'''
             br_op_izbora +=1
             x = i + 1   
 
