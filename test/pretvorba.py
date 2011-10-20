@@ -51,7 +51,7 @@ def pretvori( regex ):
                 if regex[i] == 't': prijelazni_znak = '\t'
                 elif regex[i] == 'n': prijelazni_znak = '\n'
                 elif regex[i] == '_': prijelazni_znak = ' '
-                else prijelazni_znak = regex[i]
+                else: prijelazni_znak = regex[i]
 
                 sljedece_stanje = novo_stanje()
                 dodaj_prijelaz (trenutno_stanje, sljedece_stanje, prijelazni_znak)
