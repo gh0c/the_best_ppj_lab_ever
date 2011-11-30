@@ -1,50 +1,76 @@
-'''This is the input parser for the lexycal analyzer generator
+'''ovo je parser'''
 
-created: 11. 10. 2011
-Ivan Slijepcevic
-'''
+from generator.gramatika import Gramatika
+from analizator.zajednicki.produkcija import Produkcija
 
-class Parser():
-    '''This class ...'''
+class Parser:
     
-    def __init__( self, instream ):
-        '''constructor'''
+    def __init__( self, ulazni_tok ):
+        '''konstruktor'''
         
-        self.input_stream = instream
+        # ulazna datoteka - niz (ili lista) stringova kakvi su zadani u zadatku
+        # vec odvojeni po znaku za novi redak
+        self.ulazna_datoteka = ulazni_tok.read().split('\n')
         
-        # lista regdef. svaki clan liste bi bio nesto tipa n-torka:
-        # (ime_def, izraz); moze i mala lista umjesto n-torke
-        self.regular_definitions = []
+        # podaci gramatike
+        self.nezavrsni_znakovi = set([])     # skup stringova
+        self.zavrsni_znakovi = set([])      # skup stringova
+        self.pocetni_nezavrsni_znak = ''    # string
+        self.produkcije = []                # niz objekata produkcija, mora biti
+                                            # niz jer je bitan poredak
         
-        # ovdje ce ici 'desifrirane' reg_definicije
-        self.regular_dict = {}
-        
-        #liste stringova
-        self.analyzer_states = []
-        self.lexical_units = []
-        
-        # lista objekata AnalyzerRule
-        self.analyzer_rules = []
+        # sinkronizacijski znakovi
+        self.sinkronizacijski_znakovi = set([]) # skup stringova
     
     
-    def run():
+    def ucitaj_gramatiku( self ):
+        '''iz ulazne datoteke ucitava podatke i stvara (te vraca) instancu
+        Gramatike
         
-        #procitaj ulaznu datoteku
-        #ucitaj sve -> radi naredba stdin.read(); koristi self.input kao stream
+        ZORAN
+        '''
         
-        # popuni sve vrijednosti
+        '''
+        Zorane, ovdje prolazis vec pripremljeni niz self.ulazna_datoteka i 
+        popunjavas ostale podatke. Ako nesto nije jasno, javi se cim prije!
         
-        #obradi_reg_def (pomoc: ppj-labos-upute.pdf odjeljak 2.4.2 i slika 2.13)
-        # kao objektnu paradigmu, predlazem da ovo implementiras u klasi
-        # RegularExpression, u metodi get_rid_of_regdef (slobodno ju preimenujes)
+        Pazi kako stvaras produkcije! Treba za svaku stvoriti novi objekt klase
+        Produkcija. Klasa Produkcija je zapravo samo struktura, jer nema nikakve
+        metode, nego sluzi samo da sadrzi podatke o produkciji.
+        '''
         
-        #kako preimenujes regdef, popuni 'ciste' regdef u dictionary 
-        #(mozes i brisati listu putem); jer ce dict trebati kasnije, a ne list
+        '''
+        Evo malo da nesto napravim, reci ako negdje grijesim pa cu prepravit
+        Vjerojatno cu fulat negdje s pretvorbom lista -> set pa me cimni :)
+        '''
         
-        #za svaki objekt iz self.analyzer_rules
-            #pozovi metodu koja ce u regularnom izrazu reg_def pretvoriti u izraz
-            # opet mozes koristiti implementirano u koraku iznad
+        self.nezavrsni_znakovi = self.ulazna_datoteka[0].split(' ')
+        del self.nezavrsni_znakovi[0]
+        self.pocetni_nezavrsni_znak = self.nezavrsni_znakovi[0]
+        self.zavrsni_znakovi = self.ulazna_datoteka[1].split(' ')
+        del self.zavrsni_znakovi[0]
+        self.sinkronizacijski_znakovi = self.ulazna_datoteka[2].split(' ')
+        del self.sinkronizacijski_znakovi[0]
         
-        #stvori automat( reg_def_dict, stanja, lex_unit, niz_pravila )
+        j=0
+        for i in range(len(self.ulazna_datoteka)):
+            if i>2:
+                if self.ulazna_datoteka[i,0] == '<':
+                    self.trenutni_nezavrsni = self.ulazna_datoteka[i]
+                else:
+                    self.produkcije[j] = Produkcija(self.trenutni_nezavrsni, self.ulazna_datoteka[i])
+                    j++
+                    
         
-        #return automat
+        return Gramatika( self.nezavrsni_znakovi, self.zavrsni_znakovi,
+                        self.pocetni_nezavrsni_znak, self.produkcije )
+    
+    
+    def ispisi_sinkronizacijske_znakove( self ):
+        '''ispisuje sinkronizacijske znakove u neku datoteku za sintaksni
+        analizator. oni nisu potrebni generatoru pa ih ovaj parser niti ne salje
+        generatoru niti ih ne stavlja u gramatiku
+        
+        IVAN
+        '''
+        pass
