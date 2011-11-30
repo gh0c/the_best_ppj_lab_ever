@@ -1,7 +1,7 @@
 '''ovo je parser'''
 
-from generator.gramatika import Gramatika
-from analizator.zajednicki.produkcija import Produkcija
+from gramatika import Gramatika
+from produkcija import Produkcija
 
 class Parser:
     
@@ -52,18 +52,21 @@ class Parser:
         self.sinkronizacijski_znakovi = self.ulazna_datoteka[2].split(' ')
         del self.sinkronizacijski_znakovi[0]
         
-        j=0
-        for i in range(len(self.ulazna_datoteka)):
-            if i>2:
-                if self.ulazna_datoteka[i,0] == '<':
-                    self.trenutni_nezavrsni = self.ulazna_datoteka[i]
-                else:
-                    self.produkcije[j] = Produkcija(self.trenutni_nezavrsni, self.ulazna_datoteka[i])
-                    j++
+        
+        for i in range(3, len(self.ulazna_datoteka)):
+            
+            if self.ulazna_datoteka[i].startswith('<'):
+                for j in range (i + 1, len(self.ulazna_datoteka)):
+                    
+                    if self.ulazna_datoteka[j].startswith(' '):
+                        self.produkcije.append(Produkcija(self.ulazna_datoteka[i],
+                            self.ulazna_datoteka[j].lstrip().split(' ')))
+
+                    else: break
                     
         
         return Gramatika( self.nezavrsni_znakovi, self.zavrsni_znakovi,
-                        self.pocetni_nezavrsni_znak, self.produkcije )
+                       self.pocetni_nezavrsni_znak, self.produkcije )
     
     
     def ispisi_sinkronizacijske_znakove( self ):
